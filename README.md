@@ -1,9 +1,17 @@
 # AshGraphql
 
-![Ash CI](https://github.com/ash-project/ash_graphql/workflows/Ash%20CI/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Hex version badge](https://img.shields.io/hexpm/v/ash_graphql.svg)](https://hex.pm/packages/ash_graphql)
+Example application from the Ash Framework Getting Started guide:
+https://ash-hq.org/docs/guides/ash/latest/tutorials/get-started
 
-AshGraphql is a graphql front extension for the Ash framework.
+## Usage
 
-See the [getting started guide](https://ash-hq.org/docs/guides/ash_graphql/latest/tutorials/getting-started-with-graphql.md) for information on setting it up, and see the `AshGraphql.Resource` documentation for docs on its DSL. See the [hexdocs](https://ash-hq.org/docs/dsl/ash_graphql/latest/ashgraphql-resource) for more information.
+You must have Elixir an PostgreSQL installed. PostgreSQL must have a `postgres` user that
+can be used to log in to `psql` with the command `psql -U postgres`, with either the `postgres`
+password, or no password.
+
+1. Check out this repo
+2. Get Elixir dependencies: `mix deps.get`
+3. Create the development database: `mix do ecto.create, ecto.migrate`
+4. Run the server: `iex -S mix`
+
+You can access to the GraphQL query interface at <http://localhost:8081/playground>.
