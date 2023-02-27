@@ -1,7 +1,7 @@
 # AshGraphql
 
 Example application from the Ash Framework Getting Started guide:
-https://ash-hq.org/docs/guides/ash/latest/tutorials/get-started
+<https://ash-hq.org/docs/guides/ash/latest/tutorials/get-started>
 
 ## Usage
 
