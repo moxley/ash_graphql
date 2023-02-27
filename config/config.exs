@@ -1,7 +1,9 @@
 import Config
 
-config :ash, :utc_datetime_type, :datetime
-config :ash, :disable_async?, true
+config :ash,
+  utc_datetime_type: :datetime,
+  disable_async?: true,
+  use_all_identities_in_manage_relationship?: false
 
 if Mix.env() == :dev do
   config :git_ops,

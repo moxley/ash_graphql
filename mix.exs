@@ -138,6 +138,7 @@ defmodule AshGraphql.MixProject do
   defp deps do
     [
       {:ash, ash_version("~> 2.6 and >= 2.6.5")},
+      {:ash_postgres, "~> 1.3"},
       {:absinthe_plug, "~> 1.4"},
       {:absinthe, "~> 1.7"},
       {:dataloader, "~> 1.0"},
