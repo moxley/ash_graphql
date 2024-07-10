@@ -363,4 +363,93 @@ defmodule AshGraphql.UpdateTest do
            } =
              result
   end
+
+  test "updateCurrentUser" do
+    user = AshGraphql.Test.User
+      |> Ash.Changeset.for_create(:create, %{name: "Name"})
+      |> Ash.create!(authorize?: false)
+
+    resp =
+      """
+      mutation UpdateCurrentUser {
+        updateCurrentUser {
+          result {
+            name
+          }
+          errors {
+            message
+          }
+        }
+      }
+      """
+      |> Absinthe.run(AshGraphql.Test.Schema,
+        context: %{
+          actor: user
+        }
+      )
+
+      # Logs the following:
+      #
+      # 13:38:11.914 [warning] `fa343d97-883c-4734-9696-60e52b4bcfd4`: AshGraphql.Error not implemented for error:
+
+      # ** (Ash.Error.Invalid.NoMatchingBulkStrategy) AshGraphql.Test.User.update had no matching bulk strategy that could be used.
+
+      # Requested strategies: [:atomic]
+
+      # Could not use `:stream`: could not stream the query
+      # Could not use `:atomic_batches`: Not in requested strategies
+      # Could not use `:atomic`: cannot atomically update a query if it has `before_action` or `after_action` hooks
+
+
+
+      # Non stream reason:
+
+      # Action AshGraphql.Test.User.current_user does not support streaming with one of [:keyset].
+
+      # There are two ways to handle this.
+
+      # 1.) Use the `allow_stream_with` or `stream_with` options to control what strategies are allowed.
+      # 2.) Enable the respective required pagination type on the action current_user, for example:
+
+      #     # allow keyset
+      #     pagination keyset?: true, required?: false
+
+      #     # allow offset
+      #     pagination offset?: true, required?: false
+
+      #     # allow both
+      #     pagination offset?: true, keyset?: true, required?: false
+
+
+
+      #     (elixir 1.16.0) lib/process.ex:860: Process.info/2
+      #     (ash 3.0.16) lib/ash/error/invalid/no_matching_bulk_strategy.ex:5: Ash.Error.Invalid.NoMatchingBulkStrategy.exception/1
+      #     (ash 3.0.16) lib/ash/actions/update/bulk.ex:104: Ash.Actions.Update.Bulk.run/6
+      #     (ash 3.0.16) lib/ash/actions/update/bulk.ex:955: anonymous fn/7 in Ash.Actions.Update.Bulk.do_atomic_batches/6
+      #     (elixir 1.16.0) lib/stream.ex:613: anonymous fn/4 in Stream.map/2
+      #     (elixir 1.16.0) lib/stream.ex:1816: anonymous fn/3 in Enumerable.Stream.reduce/3
+      #     (elixir 1.16.0) lib/stream.ex:289: Stream.after_chunk_while/2
+      #     (elixir 1.16.0) lib/stream.ex:1845: Enumerable.Stream.do_done/2
+      #     (elixir 1.16.0) lib/stream.ex:1828: Enumerable.Stream.do_each/4
+      #     (elixir 1.16.0) lib/stream.ex:943: Stream.do_transform/5
+      #     (elixir 1.16.0) lib/enum.ex:4399: Enum.reverse/1
+      #     (elixir 1.16.0) lib/enum.ex:3728: Enum.to_list/1
+      #     (ash 3.0.16) lib/ash/actions/update/bulk.ex:1070: Ash.Actions.Update.Bulk.run_batches/3
+      #     (ash 3.0.16) lib/ash/actions/update/bulk.ex:386: Ash.Actions.Update.Bulk.run/6
+      #     (ash_graphql 1.2.0) lib/graphql/resolver.ex:1236: AshGraphql.Graphql.Resolver.mutate/2
+      #     (absinthe 1.7.6) lib/absinthe/phase/document/execution/resolution.ex:234: Absinthe.Phase.Document.Execution.Resolution.reduce_resolution/1
+      #     (absinthe 1.7.6) lib/absinthe/phase/document/execution/resolution.ex:189: Absinthe.Phase.Document.Execution.Resolution.do_resolve_field/3
+      #     (absinthe 1.7.6) lib/absinthe/phase/document/execution/resolution.ex:174: Absinthe.Phase.Document.Execution.Resolution.do_resolve_fields/6
+      #     (absinthe 1.7.6) lib/absinthe/phase/document/execution/resolution.ex:145: Absinthe.Phase.Document.Execution.Resolution.resolve_fields/4
+      #     (absinthe 1.7.6) lib/absinthe/phase/document/execution/resolution.ex:88: Absinthe.Phase.Document.Execution.Resolution.walk_result/5
+
+    # Fails with actual value:
+    # {:ok, %{data: %{"updateCurrentUser" => %{"errors" => [%{"message" => "something went wrong. Unique error id: `fa343d97-883c-4734-9696-60e52b4bcfd4`"}], "result" => nil}}}}
+    assert {:ok,
+            %{
+              data: %{
+                "updateCurrentUser" => %{"errors" => [], "result" => %{"name" => "Name"}}
+              }
+            }} = resp
+  end
 end
