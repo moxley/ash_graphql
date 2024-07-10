@@ -125,6 +125,21 @@ defmodule RelatedPosts do
   end
 end
 
+defmodule AshGraphql.Test.CurrentActorRead do
+  use Ash.Resource.ManualRead
+
+  @impl true
+  def read(_ash_query, _ecto_query, _opts, %{actor: actor} = _context) when not is_nil(actor) do
+    dbg(actor)
+    {:ok, [actor]}
+  end
+
+  def read(_, _, _, _) do
+    dbg("read fallback")
+    {:ok, []}
+  end
+end
+
 defmodule AshGraphql.Test.Post do
   @moduledoc false
   alias AshGraphql.Test.Comment
@@ -371,7 +386,9 @@ defmodule AshGraphql.Test.Post do
     end
 
     read :best_post do
-      filter(expr(best == true))
+      # filter(expr(best == true))
+
+      manual AshGraphql.Test.CurrentActorRead
     end
 
     read :best_post_arg do
