@@ -9,6 +9,31 @@ defmodule AshGraphql.ReadTest do
     end)
   end
 
+  test "reading a calculation on a no-store resource" do
+    resp =
+      """
+      query GetDashboard {
+        getDashboard {
+          id
+          name
+          usersCount
+        }
+      }
+      """
+      |> Absinthe.run(AshGraphql.Test.Schema)
+
+      # The error message in the console is:
+      #
+      # 08:00:17.147 [error] d40348f4-1460-4ae0-923e-2207c929775c: Exception raised while resolving query.
+
+      # ** (RuntimeError) group_id must be an integer
+
+      #     (ash_graphql 1.2.0) test/support/users_count_calculation.ex:10: anonymous fn/1 in AshGraphql.Test.UsersCountCalculation.calculate/3
+
+    assert {:ok, %{data: %{"getDashboard" => %{"usersCount" => 20}}}} = resp
+  end
+
+
   test "float fields works correctly" do
     AshGraphql.Test.Post
     |> Ash.Changeset.for_create(:create, text: "foo", published: true, score: 9.8)

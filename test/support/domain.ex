@@ -22,6 +22,7 @@ defmodule AshGraphql.Test.Domain do
     resource(AshGraphql.Test.Comment)
     resource(AshGraphql.Test.CompositePrimaryKey)
     resource(AshGraphql.Test.CompositePrimaryKeyNotEncoded)
+    resource(AshGraphql.Test.Dashboard)
     resource(AshGraphql.Test.DoubleRelRecursive)
     resource(AshGraphql.Test.DoubleRelToRecursiveParentOfEmbed)
     resource(AshGraphql.Test.MapTypes)
